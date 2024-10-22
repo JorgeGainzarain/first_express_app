@@ -1,0 +1,20 @@
+meta {
+  name: addEvent
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/events/10
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Summer Music Festival",
+    "description": "Live music performances",
+    "datetime": "2023-06-14T12:34:56.789Z",
+    "location": "Central Park, New York"
+  }
+}
