@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addEvent, getEventById, getAllEvents } from "../services/events.service";
+import { addEvent, getEventById, getAllEvents, deleteEvent, updateEvent } from "../services/events.service";
 
 const router = Router();
 
@@ -7,7 +7,7 @@ const router = Router();
 router.get('/', async (req, res) => {
     let events = await getAllEvents();
     res.send(events);
-});
+})
 
 router.get('/:id', async (req, res) => {
     let id = parseInt(req.params.id);
@@ -36,14 +36,28 @@ router.post('/:id', async (req, res) => {
             message: error.message
         });
     }
-});
+})
 
 router.put('/:id', async (req, res) => {
     let json = req.body
     if (json === null) res.status(400).send({ error: 'No event data provided' });
     json.id = req.params.id;
+    let event = updateEvent(json);
+    if (!event) res.status(404).send({ error: `Event with id ${json.id} not found` });
+    res.send({message: `Event with id ${json.id} updated successfully` });
+})
 
+router.delete('/:id', async (req, res) => {
+    let id = parseInt(req.params.id);
+    let event = await deleteEvent(id);
+    if (!event) res.status(404).send({ error: `Event with id ${id} not found` });
+    res.send({ message: `Event with id ${id} deleted successfully` });
+})
 
+router.patch('/:id', async (req, res) => {
+    let json = req.body
+    if (json === null) res.status(400).send({ error: 'No event data provided' });
+    json.id = req.params.id;
 
 })
 
